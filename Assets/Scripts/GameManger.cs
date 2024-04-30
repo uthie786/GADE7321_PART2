@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,11 +9,17 @@ public class GameManger : MonoBehaviour
     [SerializeField] private GameObject pawns;
     private bool isPlayer1 = true;
     [SerializeField] private GameObject king;
-    // Start is called before the first frame update
+    
+    public static GameManger Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     void Start()
     {
-        InitializeBoard();
-        Debug.Log(board.Length);
+        InitializeBoard(); 
     }
 
     // Update is called once per frame

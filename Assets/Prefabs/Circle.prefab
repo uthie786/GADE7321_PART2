@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -4560665716447474274}
   m_Layer: 0
   m_Name: Circle
-  m_TagString: Pawn
+  m_TagString: King
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -143,3 +143,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ca57f9a89a1fd64990327f7ad33551c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDragging: 0
