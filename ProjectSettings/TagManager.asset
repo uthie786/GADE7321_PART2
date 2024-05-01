@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Pawn
   - King
+  - King2
+  - Pawn2
+  - Board
   layers:
   - Default
   - TransparentFX

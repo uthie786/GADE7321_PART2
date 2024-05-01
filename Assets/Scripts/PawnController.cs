@@ -5,13 +5,13 @@ using UnityEngine;
 public class PawnController : MonoBehaviour
 {
     private bool isMovePossible;
-    // Start is called before the first frame update
+  
     void Start()
     {
       
     }
 
-    // Update is called once per frame
+   
     void Update()
     {
         CheckMove();
@@ -36,32 +36,6 @@ public class PawnController : MonoBehaviour
                         GameManger.Instance.board[x + 7].GetComponent<CircleCollider2D>().enabled = false;
   
                     }
-                    /*
-                    if (GameManger.Instance.board[x + 8].transform.childCount == 0)
-                    {
-                        GameManger.Instance.board[x + 8].GetComponent<CircleCollider2D>().enabled = true;
-                    }
-                    else
-                    {
-                        GameManger.Instance.board[x + 8].GetComponent<CircleCollider2D>().enabled = false;
-                    }
-                    if(GameManger.Instance.board[x -8].transform.childCount == 0)
-                    {
-                        GameManger.Instance.board[x - 8].GetComponent<CircleCollider2D>().enabled = true;
-                    }
-                    else
-                    {
-                        GameManger.Instance.board[x - 8].GetComponent<CircleCollider2D>().enabled = false;
-                    }
-
-                    if (GameManger.Instance.board[x - 6].transform.childCount == 0)
-                    {
-                        GameManger.Instance.board[x - 6].GetComponent<CircleCollider2D>().enabled = true;
-                    }
-                    else
-                    {
-                        GameManger.Instance.board[x - 6].GetComponent<CircleCollider2D>().enabled = false;
-                    }*/
                     return;
                 }
             }
