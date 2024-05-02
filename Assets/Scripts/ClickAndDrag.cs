@@ -21,7 +21,7 @@ public class ClickAndDrag : MonoBehaviour
 
     void OnMouseDown()
     {
-       
+       CheckPawns();
        origPosition = gameObject.transform.position;
         isDragging = true;
     }
@@ -93,7 +93,7 @@ public class ClickAndDrag : MonoBehaviour
                 }
                 transform.parent = collider.transform;
                 GameManger.Instance.num++;
-               
+               CheckPawns();
                 return;
             }
             else
@@ -254,6 +254,7 @@ public class ClickAndDrag : MonoBehaviour
                     }
                     return;
                 }
+                
             }
         }
     }
