@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ButtonManager : MonoBehaviour
 {
+    [SerializeField] private GameObject RuleScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +26,15 @@ public class ButtonManager : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void ShowRules()
+    {
+        RuleScreen.SetActive(true);
+    }
+
+    public void Back()
+    {
+        RuleScreen.SetActive(false);
     }
 }
