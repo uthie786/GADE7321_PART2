@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManger : MonoBehaviour
@@ -16,7 +17,9 @@ public class GameManger : MonoBehaviour
     [SerializeField] private GameObject p2Text;
     [SerializeField] private GameObject endScreen;
     [SerializeField] private Text endText;
+    [SerializeField] private GameObject difficultyScreen;
     public int num;
+    public bool isEasy;
     public static GameManger Instance { get; private set; }
 
     private void Awake()
@@ -30,7 +33,12 @@ public class GameManger : MonoBehaviour
         p1Text.SetActive(true);
         p2Text.SetActive(false);
         num = 1;
-        InitializeBoard(); 
+        InitializeBoard();
+        if (SceneManager.GetActiveScene().name == "Singleplayer")
+        {
+            Time.timeScale = 0;
+            difficultyScreen.SetActive(true);
+        }
     }
 
     // Update is called once per frame

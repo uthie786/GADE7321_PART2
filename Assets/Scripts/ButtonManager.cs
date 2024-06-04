@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class ButtonManager : MonoBehaviour
 {
     [SerializeField] private GameObject RuleScreen;
+
+    [SerializeField] private GameObject difficultyScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,5 +38,29 @@ public class ButtonManager : MonoBehaviour
     public void Back()
     {
         RuleScreen.SetActive(false);
+    }
+
+    public void LoadSingleplayer()
+    {
+
+        SceneManager.LoadScene("Singleplayer");
+    }
+
+    public void LoadMultiplayer()
+    {
+        SceneManager.LoadScene("Multiplayer");
+    }
+
+    public void EasyDifficulty()
+    {
+        Time.timeScale = 1;
+        difficultyScreen.SetActive(false);
+        GameManger.Instance.isEasy = true;
+    }
+    public void HardDifficulty()
+    {
+        Time.timeScale = 1;
+        difficultyScreen.SetActive(false);
+        GameManger.Instance.isEasy = false;
     }
 }
