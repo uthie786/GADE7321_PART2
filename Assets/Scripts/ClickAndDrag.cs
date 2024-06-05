@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ClickAndDrag : MonoBehaviour
 {
@@ -44,8 +45,9 @@ public class ClickAndDrag : MonoBehaviour
         if (isDragging)
         {
             
-            if (GameManger.Instance.num % 2 == 0)
+            if (GameManger.Instance.num % 2 == 0 && SceneManager.GetActiveScene().name != "Singleplayer")
             {
+                //Debug.Log(SceneManager.GetActiveScene().name);
                 if (gameObject.CompareTag("Pawn2") || gameObject.CompareTag("King2"))
                 {
                     Vector2 newPosition = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition) + offset;
@@ -272,4 +274,6 @@ public class ClickAndDrag : MonoBehaviour
             GameManger.Instance.GameOver("Player 1");
         }
     }
+  
+    
 }
