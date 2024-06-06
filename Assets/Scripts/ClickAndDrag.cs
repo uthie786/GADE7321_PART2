@@ -10,9 +10,14 @@ public class ClickAndDrag : MonoBehaviour
     public bool isDragging = false;
     private Vector2 offset;
     private Vector2 origPosition;
+    private AIOpponent aiPlayer = new AIOpponentMinMax();
     
+    kopcoRepresentation representation;
+     public int playerTurn = 1;
     
     public static ClickAndDrag Instance{get; private set; }
+    
+
 
     private void Awake()
     {
@@ -24,7 +29,7 @@ public class ClickAndDrag : MonoBehaviour
     {
        CheckPawns();
        origPosition = gameObject.transform.position;
-        isDragging = true;
+       isDragging = true;
     }
 
     void OnMouseUp()
@@ -261,6 +266,11 @@ public class ClickAndDrag : MonoBehaviour
         }
     }
 
+    void OpponentMove(Move move)
+    {
+        
+    }
+
     void CheckPawns()
     {
         Debug.Log(GameObject.FindGameObjectsWithTag("Pawn").Length);
@@ -272,6 +282,15 @@ public class ClickAndDrag : MonoBehaviour
         if (GameObject.FindGameObjectsWithTag("Pawn2").Length == 0)
         {
             GameManger.Instance.GameOver("Player 1");
+        }
+    }
+    
+    IEnumerator AITurnCoroutine(){
+        yield return new WaitForSeconds(1f);
+        Move move = aiPlayer.GetMove(representation, playerTurn);
+
+        if(move != null){
+            MakeMove(move);
         }
     }
   
