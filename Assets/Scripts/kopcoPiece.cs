@@ -7,7 +7,8 @@ public  abstract class kopcoPiece
 {
     protected kopcoRepresentation representation;
 
-    public kopcoPiece(kopcoRepresentation representation){
+    public kopcoPiece(kopcoRepresentation representation)
+    {
         this.representation = representation;
     }
 
@@ -18,7 +19,8 @@ public  abstract class kopcoPiece
         return IsValidMove(player, move.From, move.To);
     }
 
-    public virtual List<Move> GetMoves(int position, int piece){
+    public virtual List<Move> GetMoves(int position, int piece)
+    {
         List<Move> moves = new List<Move>();
         List<int> possiblePositions = GetPossiblePositions(position, piece);
 
@@ -32,7 +34,8 @@ public  abstract class kopcoPiece
         return moves;
     }
 
-    protected bool IsValidMoveGeneric(int player, int fromPosition, int toPosition){
+    protected bool IsValidMoveGeneric(int player, int fromPosition, int toPosition)
+    {
         int[] board = representation.GetAs1DArray();
 
         if(fromPosition >= board.Length || fromPosition < 0 || toPosition >= board.Length || toPosition < 0){
@@ -42,25 +45,26 @@ public  abstract class kopcoPiece
 
         //not actually moving anything
         if(fromPosition == toPosition){
-            //Debug.Log("Failed - same position");
+            Debug.Log("Failed - same position");
             return false;
         }
 
         //can't move a piece that doesn't exist
         if(board[fromPosition] == 0){
-            //Debug.Log("Failed - empty tile");
+            Debug.Log("Failed - empty tile");
             return false;
         }
 
         //can't move our opponent's pieces
+        
         if(Math.Sign(board[fromPosition]) != player){
-            //Debug.Log("Failed - moving opponent piece");
+            Debug.Log("Failed - moving opponent piece");
             return false;
         }
 
         //can't move on to our own pieces
         if(board[toPosition] != 0 && Math.Sign(board[toPosition]) == player){
-            //Debug.Log("Failed - moving on to own piece");
+            Debug.Log("Failed - moving on to own piece");
             return false;
         }
 

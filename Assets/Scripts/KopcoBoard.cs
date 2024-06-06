@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class KopcoBoard : MonoBehaviour
 {
-
+    [SerializeField] Color darkSquares = Color.black;
+    [SerializeField] Color lightSquares = Color.white;
+    [SerializeField] Color darkSquaresHighlight = Color.yellow;
+    [SerializeField] Color lightSquaresHighlight = Color.yellow;
+    [SerializeField] Color darkPieces = Color.magenta;
+    [SerializeField] Color lightPieces = Color.cyan;
     [SerializeField] GameObject tileTemplate;
     [SerializeField] GameObject chessPieceTemplate;
 
     kopcoRepresentation representation;
 
-    List<OneDChessPieceController> pieces = new List<OneDChessPieceController>();
-    List<OneDChessTileController> tiles = new List<OneDChessTileController>();
+    List<KopcoPieceController> pieces = new List<KopcoPieceController>();
+    List<KopcoTileController> tiles = new List<KopcoTileController>();
 
-    OneDChessPieceController selectedPiece;
-    OneDChessTileController selectedTile;
+    KopcoPieceController selectedPiece;
+    KopcoTileController selectedTile;
     private ClickAndDrag clicked = ClickAndDrag.Instance;
 
     /*  human player = 1
@@ -28,108 +33,151 @@ public class KopcoBoard : MonoBehaviour
     void Start()
     {
         ResetGame();
-        //GenerateBoard();
+        GenerateBoard();
         GeneratePieces();
     }
 
-    void OnEnable(){
-        //OneDChessTileController.OnTileClicked += OnTileClicked;
+    void OnEnable()
+    {
+        //Debug.Log("enabled");
+        KopcoTileController.OnTileClicked += OnTileClicked;
         //GameUIController.OnResetClicked += ResetGame;
     }
 
-    void OnDisable(){
-        //OneDChessTileController.OnTileClicked -= OnTileClicked;
+    void OnDisable()
+    {
+        //Debug.Log("disabled");
+        KopcoTileController.OnTileClicked -= OnTileClicked;
         //GameUIController.OnResetClicked -= ResetGame;
     }
 
-    int RollPlayerTurn(){
-        return Random.Range(0f, 1f) > 0.5 ? 1 : -1;
+    int RollPlayerTurn()
+    {
+        //return Random.Range(0, 2) == 1 ? 1 : -1;
+        return 1;
     }
 
-    void ResetGame(){
+    void ResetGame()
+    {
         outcome = GameOutcome.UNDETERMINED;
         representation = new kopcoRepresentation();
         playerTurn = RollPlayerTurn();
 
-        if(playerTurn == -1){
+        if(playerTurn == -1)
+        {
             StartCoroutine(AITurnCoroutine());
         }
         
         UpdateInfoMessage();
-        //GeneratePieces();
+        GeneratePieces();
     }
 
-    void GenerateBoard(){
-        int[] board = representation.GetAs1DArray();
+    void GenerateBoard()
+    {
+        int boardSize = 7;
+        GameObject[,] board = new GameObject[boardSize, boardSize];
 
-        for(int i = 0; i < board.Length; i++){
-            GameObject tile = Instantiate(tileTemplate);
+        for (int y = 0; y < boardSize; y++)
+        {
+            for (int x = 0; x < boardSize; x++)
+            {
+                GameObject tile = Instantiate(tileTemplate);
 
-            tile.transform.SetParent(transform);
-            tile.transform.position = new Vector2(-board.Length/2f + i + 0.5f, 0);
+                tile.transform.SetParent(transform);
+                tile.transform.position = new Vector2(-boardSize / 2f + x + 0.5f, -boardSize / 2f + y + 0.5f);
 
-            OneDChessTileController tileController = tile.GetComponent<OneDChessTileController>();
-            tileController.Selected = false;
-            tileController.TileNumber = i;
-            tiles.Add(tileController);
+                KopcoTileController tileController = tile.GetComponent<KopcoTileController>();
+                bool isLightSquare = (x + y) % 2 == 0;
+                tileController.NormalColour = isLightSquare ? lightSquares : darkSquares;
+                tileController.SelectedColor = isLightSquare ? lightSquaresHighlight : darkSquaresHighlight;
+                tileController.Selected = false;
+                tileController.TileNumber = y * boardSize + x;
+                tiles.Add(tileController);
+
+                board[x, y] = tile;
+            }
         }
     } 
 
-    void GeneratePieces(){
-        foreach(OneDChessPieceController piece in pieces){
-            if(piece != null){
+    void GeneratePieces()
+    {
+        foreach (KopcoPieceController piece in pieces)
+        {
+            if (piece != null)
+            {
                 Destroy(piece.gameObject);
             }
-        } 
+        }
         pieces.Clear();
-        
 
-        int[] board = representation.GetAs1DArray();
+        int boardSize = 7;
+        int[,] board = representation.GetAs2DArray();
 
-        for(int i = 0; i < board.Length; i++){
-            if(board[i] == 0){
-                pieces.Add(null);
-                continue;
+        for (int y = 0; y < boardSize; y++)
+        {
+            for (int x = 0; x < boardSize; x++)
+            {
+                if (board[x, y] == 0)
+                {
+                    pieces.Add(null);
+                    continue;
+                }
+                
+                if (y > 1 && y < boardSize - 2)
+                {
+                    pieces.Add(null);
+                    continue;
+                }
+
+                GameObject piece = Instantiate(chessPieceTemplate);
+                piece.transform.SetParent(transform);
+                piece.transform.position = new Vector2(-boardSize / 2f + x + 0.5f, -boardSize / 2f + y + 0.5f);
+                KopcoPieceController pieceController = piece.GetComponent<KopcoPieceController>();
+                pieceController.SetPieceType(Mathf.Abs(board[x, y]));
+                if (y < 2) {
+                    pieceController.SetColour(lightPieces); 
+                } else if (y >= boardSize - 2) {
+                    pieceController.SetColour(darkPieces); 
+                }
+
+                pieces.Add(pieceController);
             }
-
-            GameObject piece = Instantiate(chessPieceTemplate);
-            piece.transform.SetParent(transform);
-            piece.transform.position = new Vector2(-board.Length/2f + i + 0.5f, 0);
-
-            OneDChessPieceController pieceController = piece.GetComponent<OneDChessPieceController>();
-            pieceController.SetPieceType(Mathf.Abs(board[i]));
-            pieceController.SetColour(Mathf.Sign(board[i]) >= 0 ? lightPieces : darkPieces);
-            pieces.Add(pieceController);
         }
     }
     
 
-    void OnTileClicked(int tileNumber){
-        //ignore human moves if it is AI's turn
-        if(playerTurn != 1 && outcome != GameOutcome.UNDETERMINED){
+    void OnTileClicked(int tileNumber)
+    {
+        //Debug.Log(playerTurn + " yes");
+        
+        if(playerTurn != 1 && outcome != GameOutcome.UNDETERMINED)
+        {
             return;
         }
-
-        //move piece
-        if(clicked.isDragging == true && selectedTile.TileNumber != tileNumber){
+       
+        if(selectedTile != null && selectedTile.TileNumber != tileNumber)
+        {
+           
             Move move = new Move(selectedTile.TileNumber, tileNumber, selectedPiece.TypeNumber * playerTurn );
-
-            //check of valid move first and destory piece if captured
+           // Debug.Log(representation.IsValidMove(move, playerTurn));
             if(representation.IsValidMove(move, playerTurn)){
                 MakeMove(move);
-
-                if(outcome == GameOutcome.UNDETERMINED)
+                //Debug.Log("Move");
+                Debug.Log(outcome);
+                if (outcome == GameOutcome.UNDETERMINED)
+                {
                     StartCoroutine(AITurnCoroutine());
+                }
+                    
             }
 
             selectedPiece = null;
             selectedTile = null;
             
-            foreach(OneDChessTileController tile in tiles){
+            foreach(KopcoTileController tile in tiles){
                 tile.Selected = false;
             }
         }
-        //highlight selected tile
         else if(pieces[tileNumber] != null){
             tiles[tileNumber].Selected = !tiles[tileNumber].Selected;
             selectedPiece = pieces[tileNumber];
@@ -138,58 +186,45 @@ public class KopcoBoard : MonoBehaviour
     }
 
     void MakeMove(Move move){
-        Debug.Log(move.From + ", " + move.To + ", " + playerTurn);
-
-       pieces[move.From].transform.position = tiles[move.To].transform.position;
-
-        //capture piece
-        if(pieces[move.To] != null){
+        //Debug.Log(move.From + ", " + move.To + ", " + playerTurn);
+        pieces[move.From].transform.position = tiles[move.To].transform.position;
+       if(pieces[move.To] != null){
             Destroy(pieces[move.To].gameObject);
             pieces[move.To] = null;
-        }
-
-        pieces[move.To] = pieces[move.From];
-        pieces[move.From] = null;
-        
-
-        Debug.Log(move);
+       }
+       pieces[move.To] = pieces[move.From];
+       pieces[move.From] = null;
+       //Debug.Log(move);
         representation.MakeMove(move, playerTurn);
-
         outcome = representation.GetGameOutcome();
-
         if(outcome == GameOutcome.UNDETERMINED){
             playerTurn *= -1;
         }
-
         UpdateInfoMessage();
-
-        
-        Debug.Log(representation.GetGameOutcome());
-        Debug.Log(representation);
+        //Debug.Log(representation.GetGameOutcome());
+        //Debug.Log(representation);
     }
 
     void UpdateInfoMessage(){
         if(outcome == GameOutcome.UNDETERMINED){
             string player = playerTurn == 1 ? "Human" : "AI";
-            GameUIController.instance.SetInfoText(player + " player's turn...");
         }
         else if(outcome == GameOutcome.DRAW){
-            GameUIController.instance.SetInfoText("It's a DRAW");
         }
         else if(outcome == GameOutcome.PLAYER1){
-            GameUIController.instance.SetInfoText("Human player WINS!");
         }
         else if(outcome == GameOutcome.PLAYER2){
-            GameUIController.instance.SetInfoText("AI player WINS!");
         }
     }
 
-    IEnumerator AITurnCoroutine(){
+    IEnumerator AITurnCoroutine()
+    {
+        //Debug.Log("AIStarts");
         yield return new WaitForSeconds(1f);
-        Move move = aiPlayer.GetMove(representation, playerTurn);
-
-        if(move != null){
-            MakeMove(move);
-        }
+        Move aiMove = aiPlayer.GetMove(representation, playerTurn);
+      // if(aiMove != null)
+      // {
+           //MakeMove(move);
+      // }
     }
 }

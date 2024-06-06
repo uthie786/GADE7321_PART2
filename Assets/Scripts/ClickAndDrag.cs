@@ -290,7 +290,7 @@ public class ClickAndDrag : MonoBehaviour
         Move move = aiPlayer.GetMove(representation, playerTurn);
 
         if(move != null){
-            MakeMove(move);
+           // MakeMove(move);
         }
     }
   
