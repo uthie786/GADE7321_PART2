@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KopcoBoard : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class KopcoBoard : MonoBehaviour
     [SerializeField] Color lightPieces = Color.cyan;
     [SerializeField] GameObject tileTemplate;
     [SerializeField] GameObject chessPieceTemplate;
+    [SerializeField] private GameObject endScreen;
+    [SerializeField] private Text endText;
 
     kopcoRepresentation representation;
 
@@ -135,11 +138,15 @@ public class KopcoBoard : MonoBehaviour
                 KopcoPieceController pieceController = piece.GetComponent<KopcoPieceController>();
                 pieceController.SetPieceType(Mathf.Abs(board[x, y]));
                 if (y < 2) {
-                    pieceController.SetColour(lightPieces); 
+                    pieceController.SetColour(lightPieces);
+                    piece.tag = "Light";
                 } else if (y >= boardSize - 2) {
-                    pieceController.SetColour(darkPieces); 
+                    pieceController.SetColour(darkPieces);
+                    piece.tag = "Dark";
                 }
 
+                //Debug.Log(pieceController);
+                Debug.Log(pieceController.Type);
                 pieces.Add(pieceController);
             }
         }
@@ -206,14 +213,24 @@ public class KopcoBoard : MonoBehaviour
     }
 
     void UpdateInfoMessage(){
-        if(outcome == GameOutcome.UNDETERMINED){
+        if(outcome == GameOutcome.UNDETERMINED)
+        {
             string player = playerTurn == 1 ? "Human" : "AI";
         }
-        else if(outcome == GameOutcome.DRAW){
+        else if(outcome == GameOutcome.DRAW)
+        {
+            endScreen.SetActive(true);
+            endText.text = "DRAW";
         }
-        else if(outcome == GameOutcome.PLAYER1){
+        else if(outcome == GameOutcome.PLAYER1)
+        {
+            endScreen.SetActive(true);
+            endText.text = "Player 1 Wins";
         }
-        else if(outcome == GameOutcome.PLAYER2){
+        else if(outcome == GameOutcome.PLAYER2)
+        {
+            endScreen.SetActive(true);
+            endText.text = "Player 2 Wins";
         }
     }
 
@@ -222,9 +239,9 @@ public class KopcoBoard : MonoBehaviour
         //Debug.Log("AIStarts");
         yield return new WaitForSeconds(1f);
         Move aiMove = aiPlayer.GetMove(representation, playerTurn);
-      // if(aiMove != null)
-      // {
-           //MakeMove(move);
-      // }
+      if(aiMove != null)
+      {
+           MakeMove(aiMove);
+      }
     }
 }

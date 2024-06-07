@@ -118,15 +118,14 @@ public class kopcoRepresentation : Irepresentation
                 isValid = new BrutePiece(this).IsValidMove(player, move.From, move.To);
                 break;
         }
-
-        // Check if the destination tile contains an opponent's piece
+        
         int[] board = GetAs1DArray();
         int toPosition = move.To;
         int destinationPiece = board[toPosition];
 
         if (destinationPiece != 0 && Math.Sign(destinationPiece) == player)
         {
-            // Move is invalid if the destination contains a piece of the same player
+            
             return false;
         }
 
@@ -137,33 +136,30 @@ public class kopcoRepresentation : Irepresentation
     { int player1Moves = GetPossibleMoves(1).Count;
         int player2Moves = GetPossibleMoves(-1).Count;
 
-        //bool player1InCheck = IsKingInCheck(1);
-        //bool player2InCheck = IsKingInCheck(-1);
-
-        //win 
-        /*
-        if(player1Moves == 0 && player1InCheck){
-            return GameOutcome.PLAYER2;
-        }
-        if(player2Moves == 0 && player2InCheck){
-            return GameOutcome.PLAYER1;
-        }
-
-        //draw
-        if(player1Moves == 0 && !player1InCheck){
+        if(IsOnlyBrutesLeft()){
             return GameOutcome.DRAW;
         }
-        if(player2Moves == 0 && !player2InCheck){
-            return GameOutcome.DRAW;
-        }
-        if(IsOnlyKingsLeft()){
-            return GameOutcome.DRAW;
-        }
-*/
         //still undetermined
+        if (player1Moves == 0)
+        {
+            return GameOutcome.PLAYER2; 
+        }
+        if (player2Moves == 0)
+        {
+            return GameOutcome.PLAYER1; 
+        }
+        
         return GameOutcome.UNDETERMINED; 
     }
     
+    public bool IsOnlyBrutesLeft(){
+        foreach(int tile in board){
+            if(Mathf.Abs(tile) > 1){
+                return false;
+            }
+        }
+        return true;
+    }
    
 
     void Start()
@@ -171,7 +167,7 @@ public class kopcoRepresentation : Irepresentation
         
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         

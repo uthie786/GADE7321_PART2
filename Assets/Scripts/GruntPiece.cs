@@ -11,7 +11,7 @@ public class GruntPiece : kopcoPiece
     {
         if (!IsValidMoveGeneric(player, fromPosition, toPosition))
         {
-            Debug.Log("Failed Generic Checks");
+            //Debug.Log("Failed Generic Checks");
             return false;
         }
 

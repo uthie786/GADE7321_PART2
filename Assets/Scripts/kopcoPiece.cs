@@ -45,26 +45,26 @@ public  abstract class kopcoPiece
 
         //not actually moving anything
         if(fromPosition == toPosition){
-            Debug.Log("Failed - same position");
+            //Debug.Log("Failed - same position");
             return false;
         }
 
         //can't move a piece that doesn't exist
         if(board[fromPosition] == 0){
-            Debug.Log("Failed - empty tile");
+            //Debug.Log("Failed - empty tile");
             return false;
         }
 
         //can't move our opponent's pieces
         
         if(Math.Sign(board[fromPosition]) != player){
-            Debug.Log("Failed - moving opponent piece");
+            //Debug.Log("Failed - moving opponent piece");
             return false;
         }
 
         //can't move on to our own pieces
         if(board[toPosition] != 0 && Math.Sign(board[toPosition]) == player){
-            Debug.Log("Failed - moving on to own piece");
+            //Debug.Log("Failed - moving on to own piece");
             return false;
         }
 

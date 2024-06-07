@@ -9,6 +9,8 @@ TagManager:
   - King2
   - Pawn2
   - Board
+  - Light
+  - Dark
   layers:
   - Default
   - TransparentFX
