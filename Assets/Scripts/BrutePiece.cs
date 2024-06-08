@@ -11,23 +11,20 @@ public class BrutePiece : kopcoPiece
     {
         if (!IsValidMoveGeneric(player, fromPosition, toPosition))
         {
-            // Debug.Log("Failed Generic Checks");
             return false;
         }
-
+        
         int boardSize = 7;
         int fromX = fromPosition % boardSize;
         int fromY = fromPosition / boardSize;
         int toX = toPosition % boardSize;
         int toY = toPosition / boardSize;
-
-        // Check for move distance (one block in any direction)
+        
         if (Mathf.Abs(fromX - toX) <= 1 && Mathf.Abs(fromY - toY) <= 1)
         {
             return true;
         }
-
-        // Debug.Log("Failed Distance Check");
+        
         return false;
     }
 

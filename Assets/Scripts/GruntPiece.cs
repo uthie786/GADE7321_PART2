@@ -11,7 +11,6 @@ public class GruntPiece : kopcoPiece
     {
         if (!IsValidMoveGeneric(player, fromPosition, toPosition))
         {
-            //Debug.Log("Failed Generic Checks");
             return false;
         }
 
@@ -20,8 +19,7 @@ public class GruntPiece : kopcoPiece
         int fromY = fromPosition / boardSize;
         int toX = toPosition % boardSize;
         int toY = toPosition / boardSize;
-
-        // Check for diagonal move (one block diagonally)
+        
         if (Mathf.Abs(fromX - toX) == 1 && Mathf.Abs(fromY - toY) == 1)
         {
             return true;

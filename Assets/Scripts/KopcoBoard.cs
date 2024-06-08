@@ -15,6 +15,7 @@ public class KopcoBoard : MonoBehaviour
     [SerializeField] GameObject chessPieceTemplate;
     [SerializeField] private GameObject endScreen;
     [SerializeField] private Text endText;
+    [SerializeField] private GameObject difficultyScreen;
 
     kopcoRepresentation representation;
 
@@ -25,16 +26,15 @@ public class KopcoBoard : MonoBehaviour
     KopcoTileController selectedTile;
     private ClickAndDrag clicked = ClickAndDrag.Instance;
 
-    /*  human player = 1
-        ai player = -1 */
+    
     int playerTurn;
     
     private AIOpponent aiPlayer = new AIOpponentMinMax();
     GameOutcome outcome = GameOutcome.UNDETERMINED;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
+        difficultyScreen.SetActive(true);
         ResetGame();
         GenerateBoard();
         GeneratePieces();
@@ -42,21 +42,16 @@ public class KopcoBoard : MonoBehaviour
 
     void OnEnable()
     {
-        //Debug.Log("enabled");
         KopcoTileController.OnTileClicked += OnTileClicked;
-        //GameUIController.OnResetClicked += ResetGame;
     }
 
     void OnDisable()
     {
-        //Debug.Log("disabled");
         KopcoTileController.OnTileClicked -= OnTileClicked;
-        //GameUIController.OnResetClicked -= ResetGame;
     }
 
     int RollPlayerTurn()
     {
-        //return Random.Range(0, 2) == 1 ? 1 : -1;
         return 1;
     }
 
@@ -145,8 +140,6 @@ public class KopcoBoard : MonoBehaviour
                     piece.tag = "Dark";
                 }
 
-                //Debug.Log(pieceController);
-                Debug.Log(pieceController.Type);
                 pieces.Add(pieceController);
             }
         }
@@ -155,8 +148,7 @@ public class KopcoBoard : MonoBehaviour
 
     void OnTileClicked(int tileNumber)
     {
-        //Debug.Log(playerTurn + " yes");
-        
+
         if(playerTurn != 1 && outcome != GameOutcome.UNDETERMINED)
         {
             return;
@@ -166,10 +158,8 @@ public class KopcoBoard : MonoBehaviour
         {
            
             Move move = new Move(selectedTile.TileNumber, tileNumber, selectedPiece.TypeNumber * playerTurn );
-           // Debug.Log(representation.IsValidMove(move, playerTurn));
             if(representation.IsValidMove(move, playerTurn)){
                 MakeMove(move);
-                //Debug.Log("Move");
                 Debug.Log(outcome);
                 if (outcome == GameOutcome.UNDETERMINED)
                 {
@@ -192,24 +182,27 @@ public class KopcoBoard : MonoBehaviour
         }
     }
 
-    void MakeMove(Move move){
-        //Debug.Log(move.From + ", " + move.To + ", " + playerTurn);
+    void MakeMove(Move move)
+    {
+
         pieces[move.From].transform.position = tiles[move.To].transform.position;
-       if(pieces[move.To] != null){
+        if (pieces[move.To] != null)
+        {
             Destroy(pieces[move.To].gameObject);
             pieces[move.To] = null;
-       }
-       pieces[move.To] = pieces[move.From];
-       pieces[move.From] = null;
-       //Debug.Log(move);
+        }
+
+        pieces[move.To] = pieces[move.From];
+        pieces[move.From] = null;
+
         representation.MakeMove(move, playerTurn);
         outcome = representation.GetGameOutcome();
-        if(outcome == GameOutcome.UNDETERMINED){
+        if (outcome == GameOutcome.UNDETERMINED)
+        {
             playerTurn *= -1;
         }
+
         UpdateInfoMessage();
-        //Debug.Log(representation.GetGameOutcome());
-        //Debug.Log(representation);
     }
 
     void UpdateInfoMessage(){
@@ -236,7 +229,6 @@ public class KopcoBoard : MonoBehaviour
 
     IEnumerator AITurnCoroutine()
     {
-        //Debug.Log("AIStarts");
         yield return new WaitForSeconds(1f);
         Move aiMove = aiPlayer.GetMove(representation, playerTurn);
       if(aiMove != null)

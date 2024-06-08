@@ -27,7 +27,7 @@ public class ButtonManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit();
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void ShowRules()
@@ -55,12 +55,12 @@ public class ButtonManager : MonoBehaviour
     {
         Time.timeScale = 1;
         difficultyScreen.SetActive(false);
-        GameManger.Instance.isEasy = true;
+        GameManagerSIngleplayer.Instance.isEasy = 1;
     }
     public void HardDifficulty()
     {
         Time.timeScale = 1;
         difficultyScreen.SetActive(false);
-        GameManger.Instance.isEasy = false;
+        GameManagerSIngleplayer.Instance.isEasy = 2;
     }
 }

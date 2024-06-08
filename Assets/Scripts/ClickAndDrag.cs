@@ -265,11 +265,7 @@ public class ClickAndDrag : MonoBehaviour
             }
         }
     }
-
-    void OpponentMove(Move move)
-    {
-        
-    }
+    
 
     void CheckPawns()
     {
@@ -284,15 +280,5 @@ public class ClickAndDrag : MonoBehaviour
             GameManger.Instance.GameOver("Player 1");
         }
     }
-    
-    IEnumerator AITurnCoroutine(){
-        yield return new WaitForSeconds(1f);
-        Move move = aiPlayer.GetMove(representation, playerTurn);
-
-        if(move != null){
-           // MakeMove(move);
-        }
-    }
-  
     
 }

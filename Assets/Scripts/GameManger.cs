@@ -40,8 +40,7 @@ public class GameManger : MonoBehaviour
             difficultyScreen.SetActive(true);
         }
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         if (num % 2 == 0)

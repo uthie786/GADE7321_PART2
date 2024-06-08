@@ -10,7 +10,7 @@ public class KopcoEvaluator : Ievaluator
         if(outcome == GameOutcome.PLAYER1){
             return 1;
         }
-        if(outcome == GameOutcome.PLAYER2){ // change this
+        if(outcome == GameOutcome.PLAYER2){ 
             return -1;
         }
 

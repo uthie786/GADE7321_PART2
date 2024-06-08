@@ -34,7 +34,6 @@ public class KopcoTileController : MonoBehaviour
 
     void OnMouseDown() 
     {
-       // Debug.Log(TileNumber);
 
         if(OnTileClicked != null){
             OnTileClicked(TileNumber);
